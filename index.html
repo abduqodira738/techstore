@@ -1,0 +1,293 @@
+
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TECH STORE</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background: #f5f6fa;
+    color: #111;
+}
+
+header {
+    background: #101828;
+    color: white;
+    padding: 20px 7%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.logo {
+    font-size: 27px;
+    font-weight: bold;
+    color: #00d4ff;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    margin: 0 12px;
+}
+
+.cart {
+    background: #00bfff;
+    padding: 10px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    border: none;
+    font-weight: bold;
+}
+
+.hero {
+    min-height: 420px;
+    background: linear-gradient(120deg,#101828,#13547a);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    padding: 50px 8%;
+    flex-wrap: wrap;
+    gap: 30px;
+}
+
+.hero h1 {
+    font-size: 48px;
+    margin-bottom: 20px;
+}
+
+.hero p {
+    font-size: 18px;
+    margin-bottom: 25px;
+}
+
+.hero img {
+    width: 280px;
+    max-width: 100%;
+}
+
+.btn {
+    background: #00d4ff;
+    color: #101828;
+    border: none;
+    padding: 14px 25px;
+    border-radius: 7px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+section {
+    padding: 50px 7%;
+}
+
+h2 {
+    text-align: center;
+    font-size: 32px;
+    margin-bottom: 30px;
+}
+
+.search {
+    display: block;
+    margin: 0 auto 30px;
+    padding: 14px;
+    width: 100%;
+    max-width: 450px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
+
+.products {
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(220px,1fr));
+    gap: 25px;
+}
+
+.card {
+    background: white;
+    padding: 20px;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 4px 15px #00000010;
+    transition: 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-7px);
+}
+
+.card img {
+    width: 100%;
+    height: 180px;
+    object-fit: contain;
+}
+
+.card h3 {
+    margin: 15px 0;
+}
+
+.price {
+    color: #008cba;
+    font-size: 21px;
+    font-weight: bold;
+    margin: 12px;
+}
+
+.card button {
+    background: #101828;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 7px;
+    cursor: pointer;
+}
+
+footer {
+    background: #101828;
+    color: white;
+    text-align: center;
+    padding: 30px;
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="logo">TECH STORE</div>
+
+    <nav>
+        <a href="#">Bosh sahifa</a>
+        <a href="#products">Mahsulotlar</a>
+        <a href="#contact">Aloqa</a>
+    </nav>
+
+    <button class="cart" onclick="showCart()">
+        🛒 Savatcha: <span id="count">0</span>
+    </button>
+</header>
+
+<div class="hero">
+    <div>
+        <h1>Kelajak texnologiyasi!</h1>
+        <p>Eng zamonaviy smartfonlar va gadjetlar bir joyda.</p>
+        <button class="btn" onclick="goProducts()">
+            Xarid qilish
+        </button>
+    </div>
+
+    <img src="https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=500"
+         alt="Smartfon">
+</div>
+
+<section id="products">
+    <h2>Bizning mahsulotlar</h2>
+
+    <input class="search" id="search"
+           placeholder="Mahsulot qidirish..."
+           oninput="searchProducts()">
+
+    <div class="products" id="productList"></div>
+</section>
+
+<footer id="contact">
+    <h2>TECH STORE</h2>
+    <p>Biz bilan bog‘laning</p>
+    <p>© 2026 TECH STORE. Barcha huquqlar himoyalangan.</p>
+</footer>
+
+<script>
+
+const products = [
+    {
+        name: "iPhone 16 Pro",
+        price: 14500000,
+        image: "https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=400"
+    },
+    {
+        name: "Samsung Galaxy S25",
+        price: 12000000,
+        image: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400"
+    },
+    {
+        name: "HONOR Magic 7 Pro",
+        price: 11000000,
+        image: "https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=400"
+    },
+    {
+        name: "AirPods Pro",
+        price: 2500000,
+        image: "https://images.unsplash.com/photo-1600294037681-c80b4cb5b434?w=400"
+    }
+];
+
+let cart = [];
+
+function renderProducts(items) {
+    const list = document.getElementById("productList");
+    list.innerHTML = "";
+
+    items.forEach((product) => {
+        list.innerHTML += `
+            <div class="card">
+                <img src="${product.image}" alt="${product.name}">
+                <h3>${product.name}</h3>
+                <div class="price">
+                    ${product.price.toLocaleString("uz-UZ")} so'm
+                </div>
+                <button onclick="addCart('${product.name}')">
+                    Savatchaga qo'shish
+                </button>
+            </div>
+        `;
+    });
+}
+
+function addCart(name) {
+    cart.push(name);
+    document.getElementById("count").innerText = cart.length;
+    alert(name + " savatchaga qo'shildi!");
+}
+
+function showCart() {
+    if (cart.length === 0) {
+        alert("Savatchangiz hozircha bo'sh!");
+    } else {
+        alert("Savatchangiz:\n" + cart.join("\n"));
+    }
+}
+
+function searchProducts() {
+    const value = document.getElementById("search").value.toLowerCase();
+
+    const filtered = products.filter(product =>
+        product.name.toLowerCase().includes(value)
+    );
+
+    renderProducts(filtered);
+}
+
+function goProducts() {
+    document.getElementById("products").scrollIntoView({
+        behavior: "smooth"
+    });
+}
+
+renderProducts(products);
+
+</script>
+
+</body>
+</html>
